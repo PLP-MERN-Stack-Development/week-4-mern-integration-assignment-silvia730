@@ -58,13 +58,21 @@ export const postService = {
 
   // Create a new post
   createPost: async (postData) => {
-    const response = await api.post('/posts', postData);
+    let config = {};
+    if (postData instanceof FormData) {
+      config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    const response = await api.post('/posts', postData, config);
     return response.data;
   },
 
   // Update an existing post
   updatePost: async (id, postData) => {
-    const response = await api.put(`/posts/${id}`, postData);
+    let config = {};
+    if (postData instanceof FormData) {
+      config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    const response = await api.put(`/posts/${id}`, postData, config);
     return response.data;
   },
 
@@ -130,6 +138,17 @@ export const authService = {
   getCurrentUser: () => {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  },
+};
+
+export const commentService = {
+  getComments: async (postId) => {
+    const response = await api.get(`/posts/${postId}/comments`);
+    return response.data;
+  },
+  addComment: async (postId, content) => {
+    const response = await api.post(`/posts/${postId}/comments`, { content });
+    return response.data;
   },
 };
 

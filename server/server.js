@@ -1,16 +1,17 @@
 // server.js - Main server file for the MERN blog application
 
 // Import required modules
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const path = require('path');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
 
-// Import routes
-const postRoutes = require('./routes/posts');
-const categoryRoutes = require('./routes/categories');
-const authRoutes = require('./routes/auth');
+import postRoutes from './routes/postRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+
+import errorHandler from './middleware/errorHandler.js';
 
 // Load environment variables
 dotenv.config();
@@ -25,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')));
 
 // Log requests in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -46,13 +47,7 @@ app.get('/', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.statusCode || 500).json({
-    success: false,
-    error: err.message || 'Server Error',
-  });
-});
+app.use(errorHandler);
 
 // Connect to MongoDB and start server
 mongoose
@@ -75,4 +70,4 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-module.exports = app; 
+export default app; 
