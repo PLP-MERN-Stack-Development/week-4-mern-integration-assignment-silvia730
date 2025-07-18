@@ -80,12 +80,3 @@ NODE_ENV=development
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## Screenshots
-_Add screenshots of your app here_
-
-## License
-MIT
-
----
-
-**Good luck and happy coding!** 
